@@ -64,15 +64,21 @@ def fetching_tasks(dates_tuple):
             return (f"User group request API call failed. ERROR CODE: {get_user_teams_request}")    
         else:
             user_teams_json = get_user_teams_request.json().get("groups")
+            
         if user_teams_json == []:
+            st.text("No user groups found")
             return ("No user groups found")
-        # This line will get all of the tasks in your ws, I am just configuring with a test space get_tasks = requests.get(f"https://api.clickup.com/api/v2/team/{workspace_id}/task", headers=headers")
+        # This endpoint will get all of the tasks in your ws, I am just configuring with a test space get_tasks = requests.get(f"https://api.clickup.com/api/v2/team/{workspace_id}/task", headers=headers")
         get_tasks_request= requests.get(f'https://api.clickup.com/api/v2/team/{workspace_id}/task?space_ids[]={test_space_id}',headers=headers) 
         
         if get_tasks_request.status_code != 200:
             return (f"Task request API call failed. ERROR CODE: { get_tasks_request}")
         else:
             get_tasks_json = get_tasks_request.json().get("tasks")
+            
+            if get_tasks_json == []:
+                st.text("No tasks found")
+                return("No tasks found")
             
         
         start_date_ms = int(start_date.timestamp() * unix_converter)
@@ -93,7 +99,6 @@ def fetching_tasks(dates_tuple):
                 return "No entries found for that date range, please re-enter a new date"
             else:
                 tasks_and_entries_tuple = (date_filtered_entries_json , get_tasks_json, user_teams_json, total_work_days)
-                
                 return tasks_and_entries_tuple
                 
 def aggregrate_task_data(tasks_and_entries_tuple):
@@ -310,5 +315,5 @@ def display_views(dates_and_final_df):
         else: 
             st.write("You selected:", genre)
         
-
+#aggregrate_task_data(fetching_tasks(user_input()))
 display_views(aggregrate_task_data(fetching_tasks(user_input())))
