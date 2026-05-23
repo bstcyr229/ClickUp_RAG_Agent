@@ -19,8 +19,9 @@ final_data_frame_from_dashboard = final_data_frame_from_dashboard[0]
 sentence_to_be_chunked = final_data_frame_from_dashboard.apply(lambda x: f"{x['team_member']} , {x['team_member_id']} , {x['task_name']}, {x['task_id']}, {x['entry_date']}, {x['billable_hours']}, {x['non_billable']}, {x['actual_hours']}, {x['actual_hours']}, {x['team_name']}, {x['time_estimate']}, {x['task_start_date']}, {x['task_due_date']} . ",  axis=1 ).to_list()
 ids_as_strings = final_data_frame_from_dashboard.index.astype(str).tolist()
 
-# ids_as_strings = ", ".join(ids_as_strings)
-
+ids_as_strings = ", ".join(ids_as_strings)
+print(len(ids_as_strings))
+print(len(sentence_to_be_chunked))
 # final_df_collection.add(
 #     ids= ids_as_strings,
 #     documents= sentence_to_be_chunked,
