@@ -5,13 +5,19 @@ import numpy
 import pandas as pd 
 # from sentence_transformers import SentenceTransformer
 
-
-# user_input = {
-#     "User Input": "",
-# }
-
 client = chromadb.PersistentClient(path="./chroma_db")
 final_df_collection = client.get_or_create_collection(name="clickup_final_df_collection")
+user_input_collection = client.get_or_create_collection(name='user_input_collection')
+
+user_input = {
+    "User Input": "",
+}
+user_input_collection.query(
+    user_input_to_be_vectorized = user_input,
+    n_results=1
+)
+
+
 
 
 final_data_frame_from_dashboard = dashboard.aggregrate_task_data(dashboard.fetching_tasks(dashboard.user_input()))
