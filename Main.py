@@ -3,18 +3,24 @@ import chromadb
 import streamlit as st
 import numpy
 import pandas as pd 
+import os
+import dotenv
 from chromadb.utils.embedding_functions import OpenAIEmbeddingFunction
+from dotenv import load_dotenv 
+load_dotenv()
+
 
 client = chromadb.PersistentClient(path="./chroma_db")
+CHROMA_OPENAI_API_KEY = os.getenv("llm_key")
 
-
-final_df_collection = client.get_or_create_collection(name="final_df_collection")
-final_df_collection(
-    embedding_function=OpenAIEmbeddingFunction(
-        model_name="text-embedding-3-small"
-    )
-)
-user_input_collection = client.get_or_create_collection(name='user_input_collection')
+final_df_collection = client.get_or_create_collection(name="final_df_collection", embedding_function=OpenAIEmbeddingFunction(
+        model_name="text-embedding-3-small",
+        CHROMA_OPENAI_API_KEY = CHROMA_OPENAI_API_KEY 
+    ))
+user_input_collection = client.get_or_create_collection(name='user_input_collection',  embedding_function=OpenAIEmbeddingFunction(
+        model_name="text-embedding-3-small",
+        CHROMA_OPENAI_API_KEY = CHROMA_OPENAI_API_KEY
+    ))
 
 user_input = input("Please enter your question: ")
 
@@ -35,3 +41,9 @@ final_df_collection.add(
     metadatas=metadatas
 
 )
+results = final_df_collection.query(
+    query_texts=user_input,
+    n_results=1,
+
+)
+print(results)
