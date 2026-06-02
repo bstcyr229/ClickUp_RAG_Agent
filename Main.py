@@ -5,12 +5,13 @@ import numpy
 import pandas as pd 
 import os
 import dotenv
+from google import genai 
 from chromadb.utils.embedding_functions import OpenAIEmbeddingFunction
 from dotenv import load_dotenv 
-load_dotenv()
 
 
 client = chromadb.PersistentClient(path="./chroma_db")
+
 CHROMA_OPENAI_API_KEY = os.getenv("llm_key")
 api_key = CHROMA_OPENAI_API_KEY
 
