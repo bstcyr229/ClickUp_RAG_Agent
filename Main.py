@@ -6,21 +6,20 @@ import pandas as pd
 import os
 import dotenv
 from google import genai 
-from chromadb.utils.embedding_functions import OpenAIEmbeddingFunction
+from chromadb.utils.embedding_functions import GoogleGeminiEmbeddingFunction
+
 from dotenv import load_dotenv 
 
 
 client = chromadb.PersistentClient(path="./chroma_db")
+gemini_ef = GoogleGeminiEmbeddingFunction()
 
-CHROMA_OPENAI_API_KEY = os.getenv("llm_key")
-api_key = CHROMA_OPENAI_API_KEY
+CHROMA_API_KEY = os.getenv("llm_key")
+api_key = CHROMA_API_KEY
 
-final_df_collection = client.get_or_create_collection(name="final_df_collection", embedding_function=OpenAIEmbeddingFunction(
-        model_name="text-embedding-3-small",
-        api_key = api_key
-    ))
-user_input_collection = client.get_or_create_collection(name='user_input_collection',  embedding_function=OpenAIEmbeddingFunction(
-        model_name="text-embedding-3-small",
+final_df_collection = client.get_or_create_collection(name="final_df_collection", embedding_function=gemini_ef (api_key = api_key)
+    )
+user_input_collection = client.get_or_create_collection(name='user_input_collection', embedding_function=gemini_ef (
         api_key = api_key
 
     ))
@@ -48,4 +47,3 @@ results = final_df_collection.query(
     n_results=1,
 
 )
-print(results)
