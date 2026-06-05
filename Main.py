@@ -16,6 +16,7 @@ gemini_ef = GoogleGeminiEmbeddingFunction()
 
 CHROMA_API_KEY = os.getenv("llm_key")
 api_key = CHROMA_API_KEY
+genai_client = genai.Client(api_key='CHROMA_API_KEY')
 
 final_df_collection = client.get_or_create_collection(name="final_df_collection", embedding_function=gemini_ef (api_key = api_key)
     )
