@@ -7,3 +7,5 @@ dotenv.env
 venv311/
 *.pdf
 test.py
+.vscode
+.json
