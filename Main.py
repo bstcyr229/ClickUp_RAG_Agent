@@ -17,14 +17,14 @@ from dotenv import load_dotenv
 client = chromadb.PersistentClient(path="./chroma_db")
 gemini_ef = GoogleGeminiEmbeddingFunction()
 
-CHROMA_API_KEY = os.getenv("llm_key")
-api_key = CHROMA_API_KEY
-genai_client = genai.Client(api_key=api_key)
+CHROMA_API_KEY = os.getenv("GEMINI_API_KEY")
+llm_api_key = CHROMA_API_KEY
+genai_client = genai.Client(api_key=llm_api_key)
 
-final_df_collection = client.get_or_create_collection(name="final_df_collection", embedding_function=gemini_ef (api_key = api_key)
+final_df_collection = client.get_or_create_collection(name="final_df_collection", embedding_function=gemini_ef (api_key = llm_api_key)
     )
 user_input_collection = client.get_or_create_collection(name='user_input_collection', embedding_function=gemini_ef (
-        api_key = api_key
+        api_key = llm_api_key
 
     ))
 
