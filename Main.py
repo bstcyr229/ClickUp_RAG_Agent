@@ -13,20 +13,18 @@ from chromadb.utils.embedding_functions import GoogleGeminiEmbeddingFunction
 
 from dotenv import load_dotenv 
 
-
-client = chromadb.PersistentClient(path="./chroma_db")
-gemini_ef = GoogleGeminiEmbeddingFunction()
-
 CHROMA_API_KEY = os.getenv("GEMINI_API_KEY")
 llm_api_key = CHROMA_API_KEY
+
+
+client = chromadb.PersistentClient(path="./chroma_db")
+gemini_ef = GoogleGeminiEmbeddingFunction(api_key_env_var = llm_api_key)
+
 genai_client = genai.Client(api_key=llm_api_key)
 
-final_df_collection = client.get_or_create_collection(name="final_df_collection", embedding_function=gemini_ef (api_key = llm_api_key)
+final_df_collection = client.get_or_create_collection(name="final_df_collection", embedding_function=gemini_ef
     )
-user_input_collection = client.get_or_create_collection(name='user_input_collection', embedding_function=gemini_ef (
-        api_key = llm_api_key
-
-    ))
+user_input_collection = client.get_or_create_collection(name='user_input_collection', embedding_function=gemini_ef)
 
 user_input = input("Please enter your question: ")
 
