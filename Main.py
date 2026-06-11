@@ -1,6 +1,4 @@
 import sys
-print(sys.executable)
-print("It worked")
 import dashboard as dashboard
 import chromadb
 import streamlit as st
@@ -13,14 +11,13 @@ from chromadb.utils.embedding_functions import GoogleGeminiEmbeddingFunction
 
 from dotenv import load_dotenv 
 
-CHROMA_API_KEY = os.getenv("GEMINI_API_KEY")
-llm_api_key = CHROMA_API_KEY
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+GOOGLE_GENAI_USE_VERTEXAI="false"
 
 
 client = chromadb.PersistentClient(path="./chroma_db")
-gemini_ef = GoogleGeminiEmbeddingFunction(api_key_env_var = llm_api_key)
+gemini_ef = GoogleGeminiEmbeddingFunction(api_key_env_var = "GEMINI_API_KEY")
 
-genai_client = genai.Client(api_key=llm_api_key)
 
 final_df_collection = client.get_or_create_collection(name="final_df_collection", embedding_function=gemini_ef
     )
