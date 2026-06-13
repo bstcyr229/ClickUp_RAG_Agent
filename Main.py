@@ -41,8 +41,20 @@ final_df_collection.add(
     metadatas=metadatas
 
 )
-results = final_df_collection.query(
-    query_texts=user_input,
-    n_results=1,
 
-)
+def display_results(user_input):
+
+
+    results = final_df_collection.query(
+        query_texts=user_input,
+        n_results=1,)
+    client = genai.Client(api_key=GEMINI_API_KEY)
+    prompt = "Never guessing, scan the documents and metadatas to answer the user query if you cannot find the information state I don't know"
+    response = client.models.generate_content(
+        model="gemini-3.5-flash",
+        contents=prompt
+    )
+    
+    return response
+    
+print(display_results(user_input))
