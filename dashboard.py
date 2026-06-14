@@ -132,7 +132,7 @@ def aggregrate_task_data(tasks_and_entries_tuple):
         tasks_df['team_member_id'] = tasks_df['assignees'].apply(lambda x: x.get('id') if isinstance(x,dict) else None)
         tasks_df['task_id'] = tasks_df['id']
         tasks_df['task_name'] = tasks_df['name']
-        
+
         task_df_filtered = tasks_df[[
             'task_id',
             'task_name', 

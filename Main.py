@@ -44,15 +44,16 @@ final_df_collection.add(
 
 def display_results(user_input):
 
-
+    user_input = user_input
     results = final_df_collection.query(
         query_texts=user_input,
         n_results=1,)
     client = genai.Client(api_key=GEMINI_API_KEY)
     prompt = "Never guessing, respond to the user's query by scanning the documents and metadatas to answer the user query if you cannot find the information state I don't know"
+    results_prompt_user_input = [prompt, results, user_input]  
     response = client.models.generate_content(
         model="gemini-3.5-flash",
-        contents=prompt
+        contents=results_prompt_user_input
     )
     
     return response
