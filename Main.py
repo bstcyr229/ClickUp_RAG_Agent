@@ -23,6 +23,10 @@ final_df_collection = client.get_or_create_collection(name="final_df_collection"
     )
 user_input_collection = client.get_or_create_collection(name='user_input_collection', embedding_function=gemini_ef)
 
+
+
+
+
 user_input = input("Please enter your question: ")
 
 
@@ -42,17 +46,20 @@ final_df_collection.add(
 
 )
 
+
 def display_results(user_input):
 
     user_input = user_input
     results = final_df_collection.query(
         query_texts=user_input,
-        n_results=1,)
+        n_results=10,)
     client = genai.Client(api_key=GEMINI_API_KEY)
     prompt = "Never guessing, respond to the user's query by scanning the documents and metadatas to answer the user query if you cannot find the information state I don't know"
-    results_prompt_user_input = [prompt, results, user_input]  
+    flat_results = str(results)
+    results_prompt_user_input = [prompt, flat_results, user_input]  
     response = client.models.generate_content(
-        model="gemini-3.5-flash",
+        model="gemini-3.1-flash-lite",
+        #model="gemini-3.5-flash",
         contents=results_prompt_user_input
     )
     
