@@ -12,17 +12,19 @@ from chromadb.utils.embedding_functions import GoogleGeminiEmbeddingFunction
 from dotenv import load_dotenv 
 
 load_dotenv()
-GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-GOOGLE_GENAI_USE_VERTEXAI="false"
 
+@st.cache_resource
+def get_client(GEMINI_API_KEY, GOOGLE_GENAI_USE_VERTEXAI):
+    GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+    GOOGLE_GENAI_USE_VERTEXAI="false"
+    client = chromadb.PersistentClient(path="./chroma_db")
+    gemini_ef = GoogleGeminiEmbeddingFunction(api_key_env_var = "GEMINI_API_KEY")
 
-client = chromadb.PersistentClient(path="./chroma_db")
-gemini_ef = GoogleGeminiEmbeddingFunction(api_key_env_var = "GEMINI_API_KEY")
-
-
-final_df_collection = client.get_or_create_collection(name="final_df_collection", embedding_function=gemini_ef
+@st.cache_data 
+def load_data(client,gemini_ef):
+    final_df_collection = client.get_or_create_collection(name="final_df_collection", embedding_function=gemini_ef
     )
-user_input_collection = client.get_or_create_collection(name='user_input_collection', embedding_function=gemini_ef)
+    user_input_collection = client.get_or_create_collection(name='user_input_collection', embedding_function=gemini_ef)
 
 
 
