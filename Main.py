@@ -11,6 +11,7 @@ from chromadb.utils.embedding_functions import GoogleGeminiEmbeddingFunction
 
 from dotenv import load_dotenv 
 
+load_dotenv()
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 GOOGLE_GENAI_USE_VERTEXAI="false"
 
@@ -49,7 +50,6 @@ final_df_collection.add(
 
 def display_results(user_input):
 
-    user_input = user_input
     results = final_df_collection.query(
         query_texts=user_input,
         n_results=10,)
@@ -59,7 +59,6 @@ def display_results(user_input):
     results_prompt_user_input = [prompt, flat_results, user_input]  
     response = client.models.generate_content(
         model="gemini-3.1-flash-lite",
-        #model="gemini-3.5-flash",
         contents=results_prompt_user_input
     )
     
