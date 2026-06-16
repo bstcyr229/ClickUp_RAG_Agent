@@ -12,13 +12,14 @@ from chromadb.utils.embedding_functions import GoogleGeminiEmbeddingFunction
 from dotenv import load_dotenv 
 
 load_dotenv()
+GOOGLE_GENAI_USE_VERTEXAI="false"
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 
 @st.cache_resource
-def get_client(GEMINI_API_KEY, GOOGLE_GENAI_USE_VERTEXAI):
-    GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
-    GOOGLE_GENAI_USE_VERTEXAI="false"
+def get_client():
     client = chromadb.PersistentClient(path="./chroma_db")
     gemini_ef = GoogleGeminiEmbeddingFunction(api_key_env_var = "GEMINI_API_KEY")
+    get_client_variables = gemini_ef, client
 
 @st.cache_data 
 def load_data(client,gemini_ef):
