@@ -6,7 +6,8 @@ import numpy
 import pandas as pd 
 import os
 import dotenv
-from google import genai 
+from google import genai
+import googleapis-common-protos
 from chromadb.utils.embedding_functions import GoogleGeminiEmbeddingFunction
 
 from dotenv import load_dotenv 
