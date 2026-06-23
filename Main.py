@@ -1,4 +1,3 @@
-import sys
 import dashboard as dashboard
 import chromadb
 import streamlit as st
@@ -7,10 +6,10 @@ import pandas as pd
 import os
 import dotenv
 from google import genai
-import googleapis-common-protos
-from chromadb.utils.embedding_functions import GoogleGeminiEmbeddingFunction
 
+from chromadb.utils.embedding_functions import GoogleGeminiEmbeddingFunction
 from dotenv import load_dotenv 
+
 
 load_dotenv()
 GOOGLE_GENAI_USE_VERTEXAI="false"
@@ -21,14 +20,14 @@ GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 def get_client():
     client = chromadb.PersistentClient(path="./chroma_db")
     gemini_ef = GoogleGeminiEmbeddingFunction(api_key_env_var = "GEMINI_API_KEY")
-    get_client_variables = client, gemini_ef
+    _get_client_variables = client, gemini_ef
     
-    return get_client_variables
+    return _get_client_variables
 
-@st.cache_data 
-def load_data(get_client_variables):
-    client = get_client_variables[0]    
-    gemini_ef = get_client_variables[1]
+@st.cache_resource 
+def load_data(_get_client_variables):
+    client = _get_client_variables[0]    
+    gemini_ef = _get_client_variables[1]
     final_df_collection = client.get_or_create_collection(name="final_df_collection", embedding_function=gemini_ef
     )
     user_input_collection = client.get_or_create_collection(name='user_input_collection', embedding_function=gemini_ef)
@@ -46,10 +45,6 @@ def load_data(get_client_variables):
 
     )
     return final_df_collection
-
-
-
-
 def get_input():
     st.write("Please enter your question: ")
     user_input = st.text_input(label="User Input")
@@ -70,3 +65,4 @@ def display_results(user_input, final_df_collection):
     
     return response
 
+display_results(get_input(load_data(get_client())))
