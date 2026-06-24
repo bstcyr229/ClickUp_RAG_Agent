@@ -50,19 +50,22 @@ def get_input():
     user_input = st.text_input(label="User Input")
     return user_input
 def display_results(user_input, final_df_collection):
-
-    results = final_df_collection.query(
-        query_texts=user_input,
-        n_results=10,)
-    client = genai.Client(api_key=GEMINI_API_KEY)
-    prompt = "Never guessing, respond to the user's query by scanning the documents and metadatas to answer the user query if you cannot find the information state I don't know"
-    flat_results = str(results)
-    results_prompt_user_input = [prompt, flat_results, user_input]  
-    response = client.models.generate_content(
-        model="gemini-3.1-flash-lite",
-        contents=results_prompt_user_input
-    )
+    if not user_input:
+        st.write("Please submit a question") 
     
-    return response
+    else:
+        results = final_df_collection.query(
+            query_texts=user_input,
+            n_results=10,)
+        client = genai.Client(api_key=GEMINI_API_KEY)
+        prompt = "Never guessing, respond to the user's query by scanning the documents and metadatas to answer the user query if you cannot find the information state I don't know"
+        flat_results = str(results)
+        results_prompt_user_input = [prompt, flat_results, user_input]  
+        response = client.models.generate_content(
+            model="gemini-3.1-flash-lite",
+            contents=results_prompt_user_input
+        )
+        
+        return response
 
-display_results(get_input(load_data(get_client())))
+display_results(get_input(), load_data(get_client()))
