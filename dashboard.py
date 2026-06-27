@@ -6,7 +6,8 @@ import altair as alt
 import requests
 import os
 import json 
-import holidays 
+import holidays
+import rag_agent
 
 from datetime import datetime as dt, timedelta , timezone 
 
@@ -15,9 +16,9 @@ load_dotenv()
 
 
 
-def user_input():
-        start_date = st.datetime_input(label="Please enter start date", format="YYYY/MM/DD", value=dt(2026, 4, 1, tzinfo=timezone.utc), key="start date")
-        end_date =  st.datetime_input(label="Please enter end date", format="YYYY/MM/DD", value=dt(2026, 5, 1, tzinfo=timezone.utc), key="end date" )
+def user_input_for_dashboard():
+        start_date = st.datetime_input(label="Please enter start date", format="YYYY/MM/DD", value=dt(2026, 4, 1, tzinfo=timezone.utc), key="start_date")
+        end_date =  st.datetime_input(label="Please enter end date", format="YYYY/MM/DD", value=dt(2026, 5, 1, tzinfo=timezone.utc), key="end_date" )
         dates_tuple = start_date, end_date
         return dates_tuple
 def fetching_tasks(dates_tuple):
@@ -289,8 +290,7 @@ def display_views(dates_and_final_df):
             st.title("Tasks: Estimated, Actual and Billable Hours")
             st.altair_chart(chart, use_container_width=True)
         
-        # user_input = ""
-        # user_input = st.text_input(label="Please input date: Year, Month, Day")
+
 
 
         genre = st.radio(
@@ -305,15 +305,21 @@ def display_views(dates_and_final_df):
 
 
         elif genre == "View One: Team View":
+            rag_agent.display_results(rag_agent.get_input(), rag_agent.load_data(rag_agent.get_client()))
             view_one() 
-
+            
         elif genre == "View Two: View by Assignee":
+            rag_agent.display_results(rag_agent.get_input(), rag_agent.load_data(rag_agent.get_client()))
             view_two() 
-
         elif genre == "View Three: Project/Task View":
+            rag_agent.display_results(rag_agent.get_input(), rag_agent.load_data(rag_agent.get_client()))
             view_three()
         else: 
             st.write("You selected:", genre)
-        
-#aggregrate_task_data(fetching_tasks(user_input()))
-display_views(aggregrate_task_data(fetching_tasks(user_input())))
+            
+            
+
+def main():
+    display_views(aggregrate_task_data(fetching_tasks(user_input_for_dashboard())))
+if __name__ == "__main__":
+    main()
