@@ -187,6 +187,7 @@ def display_views(dates_and_final_df):
 
         def view_one():
             #Team View 
+            rag_agent.display_results(rag_agent.get_input(), rag_agent.load_data(rag_agent.get_client()))
             work_day_duration = 8
             rounder = 100 
             team_members =  final_df.groupby("team_name")["team_member"].unique()
@@ -225,6 +226,7 @@ def display_views(dates_and_final_df):
 
         def view_two():
             #Staff member drill down 
+            rag_agent.display_results(rag_agent.get_input(), rag_agent.load_data(rag_agent.get_client()))
             team_member_estimated_hours_worked = final_df.groupby("team_member")["time_estimate"].sum()
             team_member_actual_hours_worked = final_df.groupby("team_member")["actual_hours"].sum()
             team_member_total_hours_worked = final_df.groupby("team_member")["actual_hours"].sum()
@@ -263,6 +265,7 @@ def display_views(dates_and_final_df):
             ).transform_fold(["Estimated", "Actual", "Billable"], as_=["variable", "value"])
             st.altair_chart(chart, width='stretch')
         def view_three():
+            rag_agent.display_results(rag_agent.get_input(), rag_agent.load_data(rag_agent.get_client()))
             tasks_for_view_three = final_df["task_name"]
             task_ids_for_view_three = final_df["task_id"]
             task_estimated_hours = final_df["time_estimate"]
@@ -305,14 +308,11 @@ def display_views(dates_and_final_df):
 
 
         elif genre == "View One: Team View":
-            rag_agent.display_results(rag_agent.get_input(), rag_agent.load_data(rag_agent.get_client()))
             view_one() 
             
         elif genre == "View Two: View by Assignee":
-            rag_agent.display_results(rag_agent.get_input(), rag_agent.load_data(rag_agent.get_client()))
             view_two() 
         elif genre == "View Three: Project/Task View":
-            rag_agent.display_results(rag_agent.get_input(), rag_agent.load_data(rag_agent.get_client()))
             view_three()
         else: 
             st.write("You selected:", genre)
