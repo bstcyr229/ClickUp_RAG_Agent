@@ -321,7 +321,7 @@ def display_views(dates_and_final_df):
             view_three()
         else: 
             st.write("You selected:", genre)
-
+        return final_df
 
 @st.cache_resource
 def get_client():
@@ -373,12 +373,12 @@ def display_results(user_input, final_df_collection):
         )
         
         return response
-def rag_call():
+def rag_call(): 
     display_results(get_input(), load_data(display_views(aggregrate_task_data(fetching_tasks(user_input_for_dashboard()))),get_client()))
 def main():
     display_views(aggregrate_task_data(fetching_tasks(user_input_for_dashboard()))), rag_call()
     
-
-    
+    rag_call()
+main()
 if __name__ == "__main__":
     main()
