@@ -321,12 +321,15 @@ def display_views(dates_and_final_df):
             view_three()
         else: 
             st.write("You selected:", genre)
-def rag_call(): 
-    display_results(get_input(), load_data(display_views(aggregrate_task_data(fetching_tasks(user_input_for_dashboard()))),get_client()))
+# def rag_call(): 
+#     display_results(get_input(), load_data(display_views(aggregrate_task_data(fetching_tasks(user_input_for_dashboard()))),get_client()))
 def main():
-    display_views(aggregrate_task_data(fetching_tasks(user_input_for_dashboard()))), rag_call()
-    final_df_for_rag = aggregrate_task_data(dates_and_final_df)
-    rag_call(display_results(get_input(), load_data(get_client())))     
+    step_one_for_main_call = user_input_for_dashboard()
+    step_two_for_main_call = fetching_tasks(step_one_for_main_call)
+    step_three_for_main_call = aggregrate_task_data(step_two_for_main_call)
+    step_four_for_main_call = display_views(step_three_for_main_call)
+    #final_df_for_rag = aggregrate_task_data(dates_and_final_df)
+    #rag_call(display_results(get_input(), load_data(get_client())))     
 @st.cache_resource
 def get_client():
     client = chromadb.PersistentClient(path="./chroma_db")
