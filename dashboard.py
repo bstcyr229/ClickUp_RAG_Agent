@@ -324,7 +324,7 @@ def display_views(dates_and_final_df):
 # def rag_call(): 
 #     display_results(get_input(), load_data(display_views(aggregrate_task_data(fetching_tasks(user_input_for_dashboard()))),get_client()))
 def main():
-    step_one_for_main_call = user_input_for_dashboard()
+    step_one_for_main_call = user_input_for_dashboard() #Only called here
     step_two_for_main_call = fetching_tasks(step_one_for_main_call)
     step_three_for_main_call = aggregrate_task_data(step_two_for_main_call)
     step_four_for_main_call = display_views(step_three_for_main_call)
