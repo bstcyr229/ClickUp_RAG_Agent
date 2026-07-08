@@ -381,6 +381,5 @@ def display_results(user_input, final_df_collection):
         
         return response
 
-main()
 if __name__ == "__main__":
     main()
