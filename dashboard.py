@@ -327,9 +327,11 @@ def main():
     step_one_for_main_call = user_input_for_dashboard() #Only called here
     step_two_for_main_call = fetching_tasks(step_one_for_main_call)
     step_three_for_main_call = aggregrate_task_data(step_two_for_main_call)
-    step_four_for_main_call = display_views(step_three_for_main_call)
-    #final_df_for_rag = aggregrate_task_data(dates_and_final_df)
-    #rag_call(display_results(get_input(), load_data(get_client())))     
+    print(f"TYPE OF STEP THREE IS {type(step_one_for_main_call)}")
+    print(step_one_for_main_call)
+    # final_df_for_rag = step_three_for_main_call(dates_and_final_df)
+    # step_four_for_main_call = display_views(step_three_for_main_call)
+    # #rag_call(display_results(get_input(), load_data(get_client())))     
 @st.cache_resource
 def get_client():
     client = chromadb.PersistentClient(path="./chroma_db")
