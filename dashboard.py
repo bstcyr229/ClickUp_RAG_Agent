@@ -321,17 +321,8 @@ def display_views(dates_and_final_df):
             view_three()
         else: 
             st.write("You selected:", genre)
-# def rag_call(): 
-#     display_results(get_input(), load_data(display_views(aggregrate_task_data(fetching_tasks(user_input_for_dashboard()))),get_client()))
-def main():
-    step_one_for_main_call = user_input_for_dashboard() #Only called here
-    step_two_for_main_call = fetching_tasks(step_one_for_main_call)
-    step_three_for_main_call = aggregrate_task_data(step_two_for_main_call)
-    print(f"TYPE OF STEP THREE IS {type(step_one_for_main_call)}")
-    print(step_one_for_main_call)
-    # final_df_for_rag = step_three_for_main_call(dates_and_final_df)
-    # step_four_for_main_call = display_views(step_three_for_main_call)
-    # #rag_call(display_results(get_input(), load_data(get_client())))     
+
+
 @st.cache_resource
 def get_client():
     client = chromadb.PersistentClient(path="./chroma_db")
@@ -341,13 +332,13 @@ def get_client():
     return _get_client_variables
 
 @st.cache_resource 
-def load_data(_get_client_variables,final_df, _final_df_for_rag):
+def load_data(_get_client_variables,dates_and_final_df  ):
     client = _get_client_variables[0]    
     gemini_ef = _get_client_variables[1]
     final_df_collection = client.get_or_create_collection(name="final_df_collection", embedding_function=gemini_ef
     )
     user_input_collection = client.get_or_create_collection(name='user_input_collection', embedding_function=gemini_ef)
-    final_data_frame_from_dashboard = _final_df_for_rag
+    final_data_frame_from_dashboard = dates_and_final_df[0]
     sentence_to_be_chunked = final_data_frame_from_dashboard.apply(lambda x: f"{x['team_member']} , {x['team_member_id']} , {x['task_name']}, {x['task_id']}, {x['entry_date']}, {x['billable_hours']}, {x['non_billable']}, {x['actual_hours']}, {x['team_name']}, {x['time_estimate']}, {x['task_start_date']}, {x['task_due_date']} . ",  axis=1 ).to_list()
     metadatas = final_data_frame_from_dashboard.to_dict(orient='records')
     ids_as_strings = final_data_frame_from_dashboard.index.astype(str).tolist()
@@ -360,11 +351,12 @@ def load_data(_get_client_variables,final_df, _final_df_for_rag):
 
     )
     return final_df_collection
+
 def get_input():
     st.write("Please enter your question: ")
     user_input = st.text_input(label="User Input", key="user_input")
     return user_input
-def display_results(user_input, final_df_collection):
+def display_rag_results(user_input, final_df_collection):
     if not user_input:
         st.write("Please submit a question") 
     
@@ -382,6 +374,16 @@ def display_results(user_input, final_df_collection):
         )
         
         return response
+def main():
+    step_one_for_main_call = user_input_for_dashboard() #Only called here
+    step_two_for_main_call = fetching_tasks(step_one_for_main_call)
+    step_three_for_main_call = aggregrate_task_data(step_two_for_main_call)
+    rag_call = display_rag_results(get_input(), load_data(get_client(), step_three_for_main_call))
+    step_four_for_main_call = display_views(step_three_for_main_call)
+    
+    return step_four_for_main_call
 
+
+main()
 if __name__ == "__main__":
     main()
