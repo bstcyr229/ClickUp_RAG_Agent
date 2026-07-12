@@ -373,17 +373,18 @@ def display_rag_results(user_input, final_df_collection):
             contents=results_prompt_user_input
         )
         
+        print(f"RESPONSE IS {response}")
+        print(f"RESPONSE'S TYPE IS {type(response)}")
         return response
 def main():
-    step_one_for_main_call = user_input_for_dashboard() #Only called here
+    step_one_for_main_call = user_input_for_dashboard()
     step_two_for_main_call = fetching_tasks(step_one_for_main_call)
     step_three_for_main_call = aggregrate_task_data(step_two_for_main_call)
     rag_call = display_rag_results(get_input(), load_data(get_client(), step_three_for_main_call))
     step_four_for_main_call = display_views(step_three_for_main_call)
-    
-    return step_four_for_main_call
 
+    return rag_call 
+    #step_four_for_main_call
 
-main()
 if __name__ == "__main__":
     main()
