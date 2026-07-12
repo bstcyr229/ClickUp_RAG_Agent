@@ -180,6 +180,9 @@ def aggregrate_task_data(tasks_and_entries_tuple):
         final_df = final_df.merge(tasks_df[["task_start_date", "task_id"]], on="task_id")
         final_df = final_df.merge(tasks_df[["task_due_date", "task_id"]], on="task_id")
         dates_and_final_df = (final_df , total_work_days)
+        print(f"DATES_AND_FINAL_DF TYPE IS {type(dates_and_final_df)}")
+        print(f"UNPACKING TUPLE[0]{dates_and_final_df[0]} + {type(dates_and_final_df[0])}")
+        print(f"UNPACKING TUPLE[1] {dates_and_final_df[1]} + {type(dates_and_final_df[1])}")
         return dates_and_final_df 
 
 
@@ -380,11 +383,21 @@ def main():
     step_one_for_main_call = user_input_for_dashboard()
     step_two_for_main_call = fetching_tasks(step_one_for_main_call)
     step_three_for_main_call = aggregrate_task_data(step_two_for_main_call)
-    rag_call = display_rag_results(get_input(), load_data(get_client(), step_three_for_main_call))
-    step_four_for_main_call = display_views(step_three_for_main_call)
-
-    return rag_call 
-    #step_four_for_main_call
+    #rag_call = display_rag_results(get_input(), load_data(get_client(), step_three_for_main_call))
+    step_four_for_main_call = display_views(step_three_for_main_call) 
+    return step_four_for_main_call
 
 if __name__ == "__main__":
     main()
+
+#Working on fixing the tight coupling of the rag call in order to test and ultimately resolve the fact that input isn't returning 
+#in streamlit 
+#Trace
+# get_clients() = Get the clients(chromadb and gemini) and API keys then return them as a tuple that gets passed into the next func
+# From get get_clients we pass in the calls that got us the chromadb and gemini clients into load_data function and tuple unpack them
+# Pausing here from the RAG chain we need the final pandas df from the dashboard chain which initially takes start dates, end dates
+# and passes them into a chain of functiosn that then call the clickup api extract the data and clean it up in pandas, numpy, altair
+# Returning to the RAG chain the load_data function unpacks the user_input tuple and the final_df from the dashboard chain 
+# Calls the clients and treat the data 
+#Finally display_rag_results func takes the user's input about the data that has already been passed i.e. the tasks that occured 
+#In the user inputted date range and returns an answer
