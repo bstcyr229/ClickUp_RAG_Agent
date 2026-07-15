@@ -338,10 +338,12 @@ def get_client():
 def load_data(_get_client_variables,dates_and_final_df  ):
     client = _get_client_variables[0]    
     gemini_ef = _get_client_variables[1]
+
     final_df_collection = client.get_or_create_collection(name="final_df_collection", embedding_function=gemini_ef
     )
     user_input_collection = client.get_or_create_collection(name='user_input_collection', embedding_function=gemini_ef)
     final_data_frame_from_dashboard = dates_and_final_df[0]
+    work_days_for_data_frame_from_dashboard = dates_and_final_df[1]
     sentence_to_be_chunked = final_data_frame_from_dashboard.apply(lambda x: f"{x['team_member']} , {x['team_member_id']} , {x['task_name']}, {x['task_id']}, {x['entry_date']}, {x['billable_hours']}, {x['non_billable']}, {x['actual_hours']}, {x['team_name']}, {x['time_estimate']}, {x['task_start_date']}, {x['task_due_date']} . ",  axis=1 ).to_list()
     metadatas = final_data_frame_from_dashboard.to_dict(orient='records')
     ids_as_strings = final_data_frame_from_dashboard.index.astype(str).tolist()
@@ -351,15 +353,14 @@ def load_data(_get_client_variables,dates_and_final_df  ):
         ids= ids_as_strings,
         documents= sentence_to_be_chunked,
         metadatas=metadatas
-
     )
-    return final_df_collection
+    return final_df_collection , work_days_for_data_frame_from_dashboard
 
 def get_input():
     st.write("Please enter your question: ")
     user_input = st.text_input(label="User Input", key="user_input")
     return user_input
-def display_rag_results(user_input, final_df_collection):
+def display_rag_results(user_input, final_df_collection , work_days_for_data_frame_from_dashboard):
     if not user_input:
         st.write("Please submit a question") 
     
@@ -368,7 +369,7 @@ def display_rag_results(user_input, final_df_collection):
             query_texts=user_input,
             n_results=10,)
         client = genai.Client(api_key=GEMINI_API_KEY)
-        prompt = "Never guessing, respond to the user's query by scanning the documents and metadatas to answer the user query if you cannot find the information state I don't know"
+        prompt = f"Never guessing, respond to the user's query for the following {work_days_for_data_frame_from_dashboard} workdays by scanning the documents and metadatas to answer the user query if you cannot find the information state I don't know"
         flat_results = str(results)
         results_prompt_user_input = [prompt, flat_results, user_input]  
         response = client.models.generate_content(
