@@ -180,9 +180,7 @@ def aggregrate_task_data(tasks_and_entries_tuple):
         final_df = final_df.merge(tasks_df[["task_start_date", "task_id"]], on="task_id")
         final_df = final_df.merge(tasks_df[["task_due_date", "task_id"]], on="task_id")
         dates_and_final_df = (final_df , total_work_days)
-        print(f"DATES_AND_FINAL_DF TYPE IS {type(dates_and_final_df)}")
-        print(f"UNPACKING TUPLE[0]{dates_and_final_df[0]} + {type(dates_and_final_df[0])}")
-        print(f"UNPACKING TUPLE[1] {dates_and_final_df[1]} + {type(dates_and_final_df[1])}")
+    
         return dates_and_final_df 
 
 
@@ -377,15 +375,13 @@ def display_rag_results(user_input, final_df_collection , work_days_for_data_fra
             contents=results_prompt_user_input
         )
         
-        print(f"RESPONSE IS {response}")
-        print(f"RESPONSE'S TYPE IS {type(response)}")
         return response
 def main():
     step_one_for_main_call = user_input_for_dashboard()
     step_two_for_main_call = fetching_tasks(step_one_for_main_call)
     step_three_for_main_call = aggregrate_task_data(step_two_for_main_call)
-    #rag_call = display_rag_results(get_input(), load_data(get_client(), step_three_for_main_call))
-    step_four_for_main_call = display_views(step_three_for_main_call) 
+    rag_call = display_rag_results(get_input(), load_data(get_client(), step_three_for_main_call))
+    step_four_for_main_call = display_views(step_three_for_main_call) , rag_call 
     return step_four_for_main_call
 
 if __name__ == "__main__":
