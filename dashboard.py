@@ -359,10 +359,12 @@ def get_input():
     user_input = st.text_input(label="User Input", key="user_input")
     return user_input
 def display_rag_results(user_input, final_df_collection , work_days_for_data_frame_from_dashboard):
+    
     if not user_input:
         st.write("Please submit a question") 
     
     else:
+        
         results = final_df_collection.query(
             query_texts=user_input,
             n_results=10,)
@@ -380,9 +382,11 @@ def main():
     step_one_for_main_call = user_input_for_dashboard()
     step_two_for_main_call = fetching_tasks(step_one_for_main_call)
     step_three_for_main_call = aggregrate_task_data(step_two_for_main_call)
-    rag_call = display_rag_results(get_input(), load_data(get_client(), step_three_for_main_call))
-    step_four_for_main_call = display_views(step_three_for_main_call) , rag_call 
-    return step_four_for_main_call
+    step_four_for_main_call =  load_data(get_client(), step_three_for_main_call)
+    workdays = step_four_for_main_call[1]
+    step_five_for_main_call = display_rag_results(get_input(), step_four_for_main_call, workdays )
+    step_six_for_main_call = display_views(step_three_for_main_call) 
+    # return step_six_for_main_call
 
 if __name__ == "__main__":
     main()
