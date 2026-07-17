@@ -364,7 +364,7 @@ def display_rag_results(user_input, final_df_collection , work_days_for_data_fra
         st.write("Please submit a question") 
     
     else:
-        
+        final_df_collection = final_df_collection[0]
         results = final_df_collection.query(
             query_texts=user_input,
             n_results=10,)
@@ -377,7 +377,7 @@ def display_rag_results(user_input, final_df_collection , work_days_for_data_fra
             contents=results_prompt_user_input
         )
         
-        return response
+        return st.write((response.text))
 def main():
     step_one_for_main_call = user_input_for_dashboard()
     step_two_for_main_call = fetching_tasks(step_one_for_main_call)
@@ -386,7 +386,6 @@ def main():
     workdays = step_four_for_main_call[1]
     step_five_for_main_call = display_rag_results(get_input(), step_four_for_main_call, workdays )
     step_six_for_main_call = display_views(step_three_for_main_call) 
-    # return step_six_for_main_call
 
 if __name__ == "__main__":
     main()
