@@ -389,15 +389,3 @@ def main():
 
 if __name__ == "__main__":
     main()
-
-#Working on fixing the tight coupling of the rag call in order to test and ultimately resolve the fact that input isn't returning 
-#in streamlit 
-#Trace
-# get_clients() = Get the clients(chromadb and gemini) and API keys then return them as a tuple that gets passed into the next func
-# From get get_clients we pass in the calls that got us the chromadb and gemini clients into load_data function and tuple unpack them
-# Pausing here from the RAG chain we need the final pandas df from the dashboard chain which initially takes start dates, end dates
-# and passes them into a chain of functiosn that then call the clickup api extract the data and clean it up in pandas, numpy, altair
-# Returning to the RAG chain the load_data function unpacks the user_input tuple and the final_df from the dashboard chain 
-# Calls the clients and treat the data 
-#Finally display_rag_results func takes the user's input about the data that has already been passed i.e. the tasks that occured 
-#In the user inputted date range and returns an answer
