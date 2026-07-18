@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 The Problem
 
 ClickUp tracks everything. That's the issue. By the time a business leader wants to know something simple, who's over capacity this month, where are our estimates consistently wrong, how much of last week was actually billable — the answer is buried across hundreds of tasks, time entries, and custom fields. Native reporting shows you hours logged. It doesn't let you ask.
