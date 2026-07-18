@@ -121,6 +121,4 @@ If you're a recruiter, a fellow self-taught developer, or someone who just got t
 License
 
 MIT
-=======
-README
->>>>>>> master
+
