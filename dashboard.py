@@ -210,7 +210,9 @@ def display_views(dates_and_final_df):
             
             
             teams = final_df["team_name"].unique()
+            print(f"TEAMS VARIABLE TYPE IS {type(teams)}")
             cols = st.columns(len(teams))
+
 
             for i, team in enumerate(teams):
                 with cols[i]:
@@ -230,7 +232,7 @@ def display_views(dates_and_final_df):
         
             days_seperated_for_graph = final_df.groupby(["team_name", "entry_date"])["actual_hours"].sum().unstack().transpose().reset_index()
             st.write("Days to Hours Worked by Team")
-            st.area_chart(data=days_seperated_for_graph, x='entry_date', y=[team], width='stretch') 
+            st.area_chart(data=days_seperated_for_graph, x='entry_date', y=[teams], width='stretch') 
 
         def view_two():
             #Staff member drill down 
@@ -386,6 +388,7 @@ def main():
     workdays = step_four_for_main_call[1]
     step_five_for_main_call = display_rag_results(get_input(), step_four_for_main_call, workdays )
     step_six_for_main_call = display_views(step_three_for_main_call) 
+
 
 if __name__ == "__main__":
     main()
