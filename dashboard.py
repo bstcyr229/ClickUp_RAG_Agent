@@ -37,21 +37,20 @@ def fetching_tasks(dates_tuple):
                     "Content-Type": "application/json"}
                     
         workspace_id = os.getenv("workspace_id") #This will cause the API to only pull from one workspace
-                    
+        test_space_id = os.getenv("test_space")            
         class API_client:
-            def __init__(self,api_key, headers, workspace_id):
+            def __init__(self,api_key, headers, workspace_id, test_space_id):
                 self.api_key = api_key
                 self.headers = headers
                 self.workspace_id = workspace_id
+                self.test_space_id = test_space_id
                     
-        clickup_api_call = API_client(click_up_api_key, headers, workspace_id)
+        clickup_api_call = API_client(click_up_api_key, headers, workspace_id, test_space_id)
         if clickup_api_call.workspace_id is None:
             return st.write("No workspace Id")  
         
         
-        # if workspace_id is None:
-        #     return ("No workspace ID")
-        # test_space_id = os.getenv("test_space")
+        
         
         # get_tasks_json = []
         # date_filtered_entries = []
