@@ -1,0 +1,25 @@
+Objectives 
+
+Improve performance and UI appearance using the following principles 
+
+-Object Oriented Programming
+-Error Handling 
+-Unit Tests
+-Reducing tightly coupled functions for easier testing
+-Seperations of concern
+-UI Principle research and iterative implementation 
+-Adding in an eval harness for the RAG Agent
+
+Out of Scope 
+
+-Integrating other programs such as Monday.com, Jira etc
+-Adding new features
+
+
+
+Pseudo Code Re-Factor 
+
+Get user input (dates) and call ClickUp API 
+Normalize ClickUp Data 
+Display the data filtered by view 
+RAG Agent Pipeline/Call/Display of RAG Agent Output
