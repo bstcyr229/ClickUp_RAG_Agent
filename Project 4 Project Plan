@@ -3,10 +3,11 @@ Objectives
 Improve performance and UI appearance using the following principles 
 
 -Object Oriented Programming
+-Reducing nested loops with recursive functions 
 -Error Handling 
 -Unit Tests
 -Reducing tightly coupled functions for easier testing
--Seperations of concern
+-Seperations of concerns
 -UI Principle research and iterative implementation 
 -Adding in an eval harness for the RAG Agent
 

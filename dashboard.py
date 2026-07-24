@@ -52,70 +52,70 @@ def fetching_tasks(dates_tuple):
         
         
         
-        # get_tasks_json = []
-        # date_filtered_entries = []
-        # user_teams_json = []
-        # tasks_and_entries_tuple = ()
+        get_tasks_json = []
+        date_filtered_entries = []
+        user_teams_json = []
+        tasks_and_entries_tuple = ()
 
 
-        # us_holidays = holidays.US()
+        us_holidays = holidays.US()
 
 
-        # date_differences = end_date - start_date
-        # total_work_days = date_differences.days
+        date_differences = end_date - start_date
+        total_work_days = date_differences.days
         
         
-        # date_differences_delta = range(total_work_days)
+        date_differences_delta = range(total_work_days)
         
-        # for day in date_differences_delta:
-        #     if (start_date + timedelta(days=day)).date().weekday() >= 5 or (start_date + timedelta(days=day)).date() in us_holidays:
-        #         total_work_days -= 1
+        for day in date_differences_delta:
+            if (start_date + timedelta(days=day)).date().weekday() >= 5 or (start_date + timedelta(days=day)).date() in us_holidays:
+                total_work_days -= 1
 
         
-        # unix_converter = 1000
-        # mileseconds_converter = 3600000
+        unix_converter = 1000
+        mileseconds_converter = 3600000
 
-        # get_user_teams_request = requests.get(f"https://api.clickup.com/api/v2/group?team_id={workspace_id }", headers=headers)
-        # if get_user_teams_request.status_code != 200:
-        #     return (f"User group request API call failed. ERROR CODE: {get_user_teams_request}")    
-        # else:
-        #     user_teams_json = get_user_teams_request.json().get("groups")
+        get_user_teams_request = requests.get(f"https://api.clickup.com/api/v2/group?team_id={workspace_id }", headers=headers)
+        if get_user_teams_request.status_code != 200:
+            return (f"User group request API call failed. ERROR CODE: {get_user_teams_request}")    
+        else:
+            user_teams_json = get_user_teams_request.json().get("groups")
             
-        # if user_teams_json == []:
-        #     st.text("No user groups found")
-        #     return ("No user groups found")
-        # # This endpoint will get all of the tasks in your ws, I am just configuring with a test space get_tasks = requests.get(f"https://api.clickup.com/api/v2/team/{workspace_id}/task", headers=headers")
-        # get_tasks_request= requests.get(f'https://api.clickup.com/api/v2/team/{workspace_id}/task?space_ids[]={test_space_id}',headers=headers) 
+        if user_teams_json == []:
+            st.text("No user groups found")
+            return ("No user groups found")
+        # This endpoint will get all of the tasks in your ws, I am just configuring with a test space get_tasks = requests.get(f"https://api.clickup.com/api/v2/team/{workspace_id}/task", headers=headers")
+        get_tasks_request= requests.get(f'https://api.clickup.com/api/v2/team/{workspace_id}/task?space_ids[]={test_space_id}',headers=headers) 
         
-        # if get_tasks_request.status_code != 200:
-        #     return (f"Task request API call failed. ERROR CODE: { get_tasks_request}")
-        # else:
-        #     get_tasks_json = get_tasks_request.json().get("tasks")
+        if get_tasks_request.status_code != 200:
+            return (f"Task request API call failed. ERROR CODE: { get_tasks_request}")
+        else:
+            get_tasks_json = get_tasks_request.json().get("tasks")
             
-        #     if get_tasks_json == []:
-        #         st.text("No tasks found")
-        #         return("No tasks found")
+            if get_tasks_json == []:
+                st.text("No tasks found")
+                return("No tasks found")
             
         
-        # start_date_ms = int(start_date.timestamp() * unix_converter)
-        # end_date_ms = int(end_date.timestamp() * unix_converter)
+        start_date_ms = int(start_date.timestamp() * unix_converter)
+        end_date_ms = int(end_date.timestamp() * unix_converter)
         
-        # get_entries_from_before_due_and_start_dates = requests.get(f'https://api.clickup.com/api/v2/team/{workspace_id}/time_entries?start_date={start_date_ms}&end_date={end_date_ms}', headers=headers)
+        get_entries_from_before_due_and_start_dates = requests.get(f'https://api.clickup.com/api/v2/team/{workspace_id}/time_entries?start_date={start_date_ms}&end_date={end_date_ms}', headers=headers)
             
 
-        # date_filtered_entries_json = get_entries_from_before_due_and_start_dates.json().get("data")    
+        date_filtered_entries_json = get_entries_from_before_due_and_start_dates.json().get("data")    
 
-        # if get_entries_from_before_due_and_start_dates.status_code != 200:
-        #     return st.text(f"Date filtered entries request API call failed, ERROR CODE: {get_entries_from_before_due_and_start_dates}")
-        # else:
-        #     date_filtered_entries_json = get_entries_from_before_due_and_start_dates.json().get("data")
+        if get_entries_from_before_due_and_start_dates.status_code != 200:
+            return st.text(f"Date filtered entries request API call failed, ERROR CODE: {get_entries_from_before_due_and_start_dates}")
+        else:
+            date_filtered_entries_json = get_entries_from_before_due_and_start_dates.json().get("data")
             
-        #     if date_filtered_entries_json == []:
-        #         st.text("No entries found for that date range, please re-enter a new date")
-        #         return "No entries found for that date range, please re-enter a new date"
-        #     else:
-        #         tasks_and_entries_tuple = (date_filtered_entries_json , get_tasks_json, user_teams_json, total_work_days)
-        #         return tasks_and_entries_tuple
+            if date_filtered_entries_json == []:
+                st.text("No entries found for that date range, please re-enter a new date")
+                return "No entries found for that date range, please re-enter a new date"
+            else:
+                tasks_and_entries_tuple = (date_filtered_entries_json , get_tasks_json, user_teams_json, total_work_days)
+                return tasks_and_entries_tuple
                 
 def aggregrate_task_data(tasks_and_entries_tuple):
         unix_converter = 1000
