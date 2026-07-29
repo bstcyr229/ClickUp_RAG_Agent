@@ -24,3 +24,9 @@ Get user input (dates) and call ClickUp API
 Normalize ClickUp Data 
 Display the data filtered by view 
 RAG Agent Pipeline/Call/Display of RAG Agent Output
+
+End Points 
+
+Entries  --url 'https://api.clickup.com/api/v2/team//time_entries?start_date=&end_date=' \
+Tasks 'https://api.clickup.com/api/v2/list//task?date_created_gt='
+Teams --url https://api.clickup.com/api/v2/team//group \

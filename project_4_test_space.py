@@ -30,37 +30,42 @@ class DateRange:
                 business_dates = len(pd.bdate_range(start_date,  end_date))
                 return(business_dates)
 
-
-
-def call_api(DateRange):
+class ClickUpClient:
         click_up_api_key = os.getenv("cu_api_key")
-        headers =   {"Authorization": click_up_api_key, 
-                "accept": "application/json",
-                "Content-Type": "application/json"}    
+        headers =   {"Authorization": click_up_api_key,  # noqa: RUF012
+                        "accept": "application/json",
+                        "Content-Type": "application/json"}    
+        base_url = "https://api.clickup.com/api/v2/"
+                                
+
+        def __init__(self,api_key, headers, workspace_id, test_space_id, base_url):
+                self.api_key = api_key
+                self.headers = headers
+                self.workspace_id = workspace_id
+                self.test_space_id = test_space_id 
+                self.url = base_url 
+        def print_params(self):
+                print(f"API KEY IS {self.api_key}")
+                print(f"HEADERS ARE {self.headers}")
+                print(f"WORKSPACE ID IS {self.workspace_id}")
+                print(f"TEST SPACE ID IS {self.test_space_id}")
+                print(f"URL IS {self.url}")
+        def api_call_func(self, end_point):
+                self.teams_end_point = end_point 
+                get_teams_api_call = requests.get(self.base_url + self.teams_end_point)
+                print(get_teams_api_call)
+                if get_teams_api_call.status_code != 200:
+                        return (f"User group request API call failed. ERROR CODE: {get_teams_api_call}")    
+                else:
+                        print("It works")
+                        #user_teams_json = get_teams_api_call.json().get("groups")
+                
+        #if clickup_api_call.workspace_id is None:
+                #raise ValueError("Workspace Id cannot be None.")  
+        
+def main():
         workspace_id = os.getenv("workspace_id") 
-        test_space_id = os.getenv("test_space")  #This will cause the API to only pull from one workspace
-        url = f'https://api.clickup.com/api/v2/team/{workspace_id}/task?space_ids[]={test_space_id}'
-        class ClickUpClient:
-                def __init__(self,api_key, headers, workspace_id, test_space_id, url):
-                        self.api_key = api_key
-                        self.headers = headers
-                        self.workspace_id = workspace_id
-                        self.test_space_id = test_space_id 
-                        self.url = url 
-                def print_params(self):
-                        print(f"API KEY IS {self.api_key}")
-                        print(f"HEADERS ARE {self.headers}")
-                        print(f"WORKSPACE ID IS {self.workspace_id}")
-                        print(f"TEST SPACE ID IS {self.test_space_id}")
-                        print(f"URL IS {self.url}")
+        test_space_id = os.getenv("test_space")  #This will cause the API to only pull from one workspace        
+        teams_end_point = f"team/{workspace_id}/group"
+        
 
-        clickup_api_call = ClickUpClient(click_up_api_key, headers, workspace_id, test_space_id, url)
-        clickup_api_call_test = clickup_api_call.print_params()
-        print(clickup_api_call_test)
-
-
-
-        if clickup_api_call.workspace_id is None:
-                raise ValueError("Workspace Id cannot be None.")  
-
-call_api(DateRange)
