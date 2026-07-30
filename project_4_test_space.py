@@ -36,36 +36,45 @@ class ClickUpClient:
                         "accept": "application/json",
                         "Content-Type": "application/json"}    
         base_url = "https://api.clickup.com/api/v2/"
+        workspace_id = os.getenv("workspace_id") 
+        test_space_id = os.getenv("test_space")  #This will cause the API to only pull from one workspace        
+        teams_end_point = f"team/{workspace_id}/group"
+        get_tasks_end_point= f"team/{workspace_id}/task?space_ids[]={test_space_id}" 
                                 
 
-        def __init__(self,api_key, headers, workspace_id, test_space_id, base_url):
-                self.api_key = api_key
-                self.headers = headers
-                self.workspace_id = workspace_id
-                self.test_space_id = test_space_id 
-                self.url = base_url 
-        def print_params(self):
-                print(f"API KEY IS {self.api_key}")
-                print(f"HEADERS ARE {self.headers}")
-                print(f"WORKSPACE ID IS {self.workspace_id}")
-                print(f"TEST SPACE ID IS {self.test_space_id}")
-                print(f"URL IS {self.url}")
-        def api_call_func(self, end_point):
-                self.teams_end_point = end_point 
-                get_teams_api_call = requests.get(self.base_url + self.teams_end_point)
+        # def __init__(self,api_key, headers, workspace_id, test_space_id, base_url):
+        #         self.api_key = api_key
+        #         self.headers = headers
+        #         self.workspace_id = workspace_id
+        #         self.test_space_id = test_space_id 
+        #         self.url = base_url 
+        # def print_params(self):
+        #         print(f"API KEY IS {self.api_key}")
+        #         print(f"HEADERS ARE {self.headers}")
+        #         print(f"WORKSPACE ID IS {self.workspace_id}")
+        #         print(f"TEST SPACE ID IS {self.test_space_id}")
+        #         print(f"URL IS {self.url}")
+        def api_call_func(base_url, teams_end_point, headers):
+                
+                get_teams_api_call = requests.get(base_url + teams_end_point, headers)
                 print(get_teams_api_call)
                 if get_teams_api_call.status_code != 200:
                         return (f"User group request API call failed. ERROR CODE: {get_teams_api_call}")    
                 else:
                         print("It works")
-                        #user_teams_json = get_teams_api_call.json().get("groups")
-                
-        #if clickup_api_call.workspace_id is None:
-                #raise ValueError("Workspace Id cannot be None.")  
-        
+                        #user_teams_json = get_teams_api_call.json().get("groups")  
+                #get_teams_api_call = requests.get(self.base_url + teams_end_point)
+
+                #get_tasks_end_point = 
+
 def main():
         workspace_id = os.getenv("workspace_id") 
         test_space_id = os.getenv("test_space")  #This will cause the API to only pull from one workspace        
         teams_end_point = f"team/{workspace_id}/group"
+        get_tasks_end_point= f"team/{workspace_id}/task?space_ids[]={test_space_id}" 
+        class_client = ClickUpClient()
+        click_up_api_call_test = class_client.api_call_func(teams_end_point)
+
+main()
         
 
