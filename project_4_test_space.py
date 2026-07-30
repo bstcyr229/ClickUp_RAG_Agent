@@ -54,10 +54,10 @@ class ClickUpClient:
         #         print(f"WORKSPACE ID IS {self.workspace_id}")
         #         print(f"TEST SPACE ID IS {self.test_space_id}")
         #         print(f"URL IS {self.url}")
-        def api_call_func(base_url, teams_end_point, headers):
-                
-                get_teams_api_call = requests.get(base_url + teams_end_point, headers)
-                print(get_teams_api_call)
+        def api_call_func(self, teams_end_point):
+                get_teams_api_call = requests.get(self.base_url + teams_end_point, headers=self.headers)
+                print(get_teams_api_call.url)
+                print(get_teams_api_call.text)
                 if get_teams_api_call.status_code != 200:
                         return (f"User group request API call failed. ERROR CODE: {get_teams_api_call}")    
                 else:
@@ -69,7 +69,7 @@ class ClickUpClient:
 
 def main():
         workspace_id = os.getenv("workspace_id") 
-        test_space_id = os.getenv("test_space")  #This will cause the API to only pull from one workspace        
+        test_space_id = os.getenv("test_space") 
         teams_end_point = f"team/{workspace_id}/group"
         get_tasks_end_point= f"team/{workspace_id}/task?space_ids[]={test_space_id}" 
         class_client = ClickUpClient()
