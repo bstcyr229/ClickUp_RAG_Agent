@@ -38,7 +38,6 @@ class ClickUpClient:
         base_url = "https://api.clickup.com/api/v2/"
         workspace_id = os.getenv("workspace_id") 
         test_space_id = os.getenv("test_space")  #This will cause the API to only pull from one workspace        
-        teams_end_point = f"team/{workspace_id}/group"
         get_tasks_end_point= f"team/{workspace_id}/task?space_ids[]={test_space_id}" 
                                 
 
@@ -56,13 +55,12 @@ class ClickUpClient:
         #         print(f"URL IS {self.url}")
         def api_call_func(self, teams_end_point):
                 get_teams_api_call = requests.get(self.base_url + teams_end_point, headers=self.headers)
-                print(get_teams_api_call.url)
-                print(get_teams_api_call.text)
                 if get_teams_api_call.status_code != 200:
-                        return (f"User group request API call failed. ERROR CODE: {get_teams_api_call}")    
+                        print(f"User group request API call failed. ERROR CODE: {get_teams_api_call}")    
+                        return 
                 else:
-                        print("It works")
-                        #user_teams_json = get_teams_api_call.json().get("groups")  
+                        user_teams_json = get_teams_api_call.json().get("groups")  
+                        print(user_teams_json.len())
                 #get_teams_api_call = requests.get(self.base_url + teams_end_point)
 
                 #get_tasks_end_point = 
@@ -70,11 +68,13 @@ class ClickUpClient:
 def main():
         workspace_id = os.getenv("workspace_id") 
         test_space_id = os.getenv("test_space") 
-        teams_end_point = f"team/{workspace_id}/group"
-        get_tasks_end_point= f"team/{workspace_id}/task?space_ids[]={test_space_id}" 
+        teams_end_point = f"group?team_id={workspace_id}"
+        #get_tasks_end_point=
         class_client = ClickUpClient()
         click_up_api_call_test = class_client.api_call_func(teams_end_point)
-
+        if click_up_api_call_test == None:
+                print(click_up_api_call_test)
 main()
+
         
 
