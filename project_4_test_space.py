@@ -40,27 +40,14 @@ class ClickUpClient:
         test_space_id = os.getenv("test_space")  #This will cause the API to only pull from one workspace        
         get_tasks_end_point= f"team/{workspace_id}/task?space_ids[]={test_space_id}" 
                                 
-
-        # def __init__(self,api_key, headers, workspace_id, test_space_id, base_url):
-        #         self.api_key = api_key
-        #         self.headers = headers
-        #         self.workspace_id = workspace_id
-        #         self.test_space_id = test_space_id 
-        #         self.url = base_url 
-        # def print_params(self):
-        #         print(f"API KEY IS {self.api_key}")
-        #         print(f"HEADERS ARE {self.headers}")
-        #         print(f"WORKSPACE ID IS {self.workspace_id}")
-        #         print(f"TEST SPACE ID IS {self.test_space_id}")
-        #         print(f"URL IS {self.url}")
         def api_call_func(self, teams_end_point):
                 get_teams_api_call = requests.get(self.base_url + teams_end_point, headers=self.headers)
                 if get_teams_api_call.status_code != 200:
-                        print(f"User group request API call failed. ERROR CODE: {get_teams_api_call}")    
-                        return 
+                        teams_api_end_point_error_message = print(f"User group request API call failed. ERROR CODE: {get_teams_api_call}")
+                        return print(ClickUpClient.api_call_func)   
                 else:
                         user_teams_json = get_teams_api_call.json().get("groups")  
-                        print(user_teams_json.len())
+                        return(print(user_teams_json[0]['id']))
                 #get_teams_api_call = requests.get(self.base_url + teams_end_point)
 
                 #get_tasks_end_point = 
@@ -68,7 +55,7 @@ class ClickUpClient:
 def main():
         workspace_id = os.getenv("workspace_id") 
         test_space_id = os.getenv("test_space") 
-        teams_end_point = f"group?team_id={workspace_id}"
+        teams_end_point = f"group?team_id={workspace_id}" #Reomve / failure injection
         #get_tasks_end_point=
         class_client = ClickUpClient()
         click_up_api_call_test = class_client.api_call_func(teams_end_point)
