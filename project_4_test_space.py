@@ -21,7 +21,7 @@ load_dotenv()
 
 # from chromadb.utils.embedding_functions import GoogleGeminiEmbeddingFunction
 
-#start_date = st.datetime_input(label="Please enter start date", format="YYYY/MM/DD", value=dt(2026, 4, 1, tzinfo=timezone.utc), key="start_date")
+#COMMENTED OUT TO USE A PRE-DEFINED DATE FOR TESTING start_date = st.datetime_input(label="Please enter start date", format="YYYY/MM/DD", value=dt(2026, 4, 1, tzinfo=timezone.utc), key="start_date")
 #end_date =  st.datetime_input(label="Please enter end date", format="YYYY/MM/DD", value=dt(2026, 5, 1, tzinfo=timezone.utc), key="end_date" )
 
 start_date = dt(2026, 4, 1, tzinfo=timezone.utc)
@@ -41,32 +41,46 @@ class ClickUpClient:
                         "Content-Type": "application/json"}    
         base_url = "https://api.clickup.com/api/v2/"
         workspace_id = os.getenv("workspace_id") 
-        test_space_id = os.getenv("test_space")  #This will cause the API to only pull from one workspace        
-        get_tasks_end_point= f"team/{workspace_id}/task?space_ids[]={test_space_id}" 
+        test_space_id = os.getenv("test_space")     
                                 
-        def api_call_func(self, teams_end_point):
-                
+        def api_call_func(self, teams_end_point , get_tasks_end_point, get_entries_end_point):
+                end_point_list = [teams_end_point, get_tasks_end_point, get_entries_end_point ]
+                #COMMNETED OUT TEST CALL print(f"end point list type is {type(end_point_list)} and its contents is {end_point_list}")
+                count = 0
+                number = 0
+                while count < 3:     
+                        endpoint = end_point_list[number]
+                        number += 1 
+                        count += 1 
 
 
-
-                get_teams_api_call = requests.get(self.base_url + teams_end_point, headers=self.headers)
-                if get_teams_api_call.status_code != 200:
-                        teams_api_end_point_error_message = f"User group request API call failed. ERROR CODE: {get_teams_api_call}"
-                        return print(teams_api_end_point_error_message)   
-                else:
-                        user_teams_json = get_teams_api_call.json().get("groups")  
-                        return(print(user_teams_json[0]['id']))
-                #get_teams_api_call = requests.get(self.base_url + teams_end_point)
-
-                #get_tasks_end_point = 
+                        click_up_api_call_request = requests.get(self.base_url + endpoint, headers=self.headers)
+                        if click_up_api_call_request.status_code != 200:
+                                click_up_api_end_point_error_message = f"User group request API call failed. ERROR CODE: {click_up_api_call_request}"
+                                return print(click_up_api_end_point_error_message)   
+                        elif count == 1 :
+                                user_teams_json = click_up_api_call_request.json().get("groups")
+                                print("I GOT TO USER GROUPS ")
+                                #return print(user_teams_json)
+                                
+                        elif count == 2:
+                                print("I GOT TO TASKS")
+                                tasks_json = click_up_api_call_request.json().get("tasks")
+                                #return print(tasks_json)
+                        else: 
+                                entries_json = click_up_api_call_request.json().get("data")
+                                print("I GOT TO ENTRIES")
+                                #return print(entries_json)
+                                
 
 def main():
         workspace_id = os.getenv("workspace_id") 
         test_space_id = os.getenv("test_space") 
-        teams_end_point = f"/group?team_id={workspace_id}" #Reomve / failure injection
-        #get_tasks_end_point=
+        teams_end_point = f"group?team_id={workspace_id}" #No / failure injection
+        get_tasks_end_point=f"team/{workspace_id}/task?space_ids[]={test_space_id}"
+        get_entries_end_point = f"team/{workspace_id}/time_entries?start_date={start_date}&end_date={end_date}"
         class_client = ClickUpClient()
-        click_up_api_call_test = class_client.api_call_func(teams_end_point)
+        click_up_api_call_test = class_client.api_call_func(teams_end_point, get_tasks_end_point, get_entries_end_point)
 
 main()
 
