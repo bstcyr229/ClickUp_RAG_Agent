@@ -39,7 +39,6 @@ class DateRange:
                 return(business_dates)
 
 class ClickUpClient:
-        results = {}
         click_up_api_key = os.getenv("cu_api_key")
         headers =   {"Authorization": click_up_api_key,  # noqa: RUF012
                         "accept": "application/json",
@@ -49,6 +48,8 @@ class ClickUpClient:
         test_space_id = os.getenv("test_space")     
                                 
         def api_call_func(self, teams_end_point , get_tasks_end_point, get_entries_end_point):
+                results = {}
+
                 end_point_list = [teams_end_point, get_tasks_end_point, get_entries_end_point ]
                 count = 0
                 number = 0
@@ -57,31 +58,54 @@ class ClickUpClient:
                         number += 1 
                         count += 1 
 
-
                         click_up_api_call_request = requests.get(self.base_url + endpoint, headers=self.headers)
                         if click_up_api_call_request.status_code != 200:
                                 count -= 1 
                                 number -= 1 
                                 click_up_api_end_point_error_message = f"User group request API call failed. ERROR CODE: {click_up_api_call_request}"
-                                return print(click_up_api_end_point_error_message)   
+                                print(click_up_api_end_point_error_message)
+                                return 
                         elif count == 1:
                                 user_teams_json = click_up_api_call_request.json().get("groups")
+                                results["groups:"] = user_teams_json
                         elif count == 2:
                                 tasks_json = click_up_api_call_request.json().get("tasks")
+                                results["tasks:"] = tasks_json 
                         
-                        else: 
+                        elif count == 3: 
                                 entries_json = click_up_api_call_request.json().get("data")
-                        
-                                return user_teams_json, tasks_json, entries_json
+                                results["entries"] = entries_json
+                                return results
+def data_normalization(results):
+        user_groups_df = pd.json_normalize(results["groups:"])  
+        user_groups_df = user_groups_df.explode('members')
+        user_groups_df["team_name"] = user_groups_df['name']
+        user_groups_df["team_member"] = user_groups_df['members'].apply(lambda x: x.get("username") if isinstance(x,dict) and len(x) > 0 else None)
+        user_groups_df["team_member_id"] = user_groups_df['members'].apply(lambda x: x.get("id") if isinstance(x,dict) and len(x) > 0 else None)
+        user_groups_df["team_member_id"] = user_groups_df['team_member_id'].astype('Int64')
+        user_groups_df_filtered = user_groups_df[[
+                'team_name',
+                'team_member',
+                'team_member_id',
+                ]].copy
+        
+def display_data():
+        pass 
+def rag_pipeline():
+        pass 
+
+
+
+
 def main():
         workspace_id = os.getenv("workspace_id") 
         test_space_id = os.getenv("test_space") 
-        teams_end_point = f"group?team_id={workspace_id}" 
+        teams_end_point = f"/group?team_id={workspace_id}" 
         get_tasks_end_point=f"team/{workspace_id}/task?space_ids[]={test_space_id}"
         get_entries_end_point = f"team/{workspace_id}/time_entries?start_date={start_date}&end_date={end_date}"
         class_client = ClickUpClient()
         click_up_api_call_test = class_client.api_call_func(teams_end_point, get_tasks_end_point, get_entries_end_point)
-        print(click_up_api_call_test)
+        #data_normalization(click_up_api_call_test)
 main()
 
 
