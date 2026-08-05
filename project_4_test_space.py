@@ -64,14 +64,18 @@ class ClickUpClient:
                                 number -= 1 
                                 click_up_api_end_point_error_message = f"User group request API call failed. ERROR CODE: {click_up_api_call_request}"
                                 print(click_up_api_end_point_error_message)
-                                return 
+                                print(results, f" THE COUNT IS {count}")
+                                break
                         elif count == 1:
                                 user_teams_json = click_up_api_call_request.json().get("groups")
                                 results["groups:"] = user_teams_json
+                                print(results, f" THE COUNT IS {count}")
+
+                                continue
                         elif count == 2:
                                 tasks_json = click_up_api_call_request.json().get("tasks")
                                 results["tasks:"] = tasks_json 
-                        
+                                continue
                         elif count == 3: 
                                 entries_json = click_up_api_call_request.json().get("data")
                                 results["entries"] = entries_json
@@ -100,8 +104,8 @@ def rag_pipeline():
 def main():
         workspace_id = os.getenv("workspace_id") 
         test_space_id = os.getenv("test_space") 
-        teams_end_point = f"/group?team_id={workspace_id}" 
-        get_tasks_end_point=f"team/{workspace_id}/task?space_ids[]={test_space_id}"
+        teams_end_point = f"group?team_id={workspace_id}" 
+        get_tasks_end_point=f"/team/{workspace_id}/task?space_ids[]={test_space_id}"
         get_entries_end_point = f"team/{workspace_id}/time_entries?start_date={start_date}&end_date={end_date}"
         class_client = ClickUpClient()
         click_up_api_call_test = class_client.api_call_func(teams_end_point, get_tasks_end_point, get_entries_end_point)
