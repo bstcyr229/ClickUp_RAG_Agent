@@ -62,10 +62,9 @@ class ClickUpClient:
                         if click_up_api_call_request.status_code != 200:
                                 count -= 1 
                                 number -= 1 
-                                click_up_api_end_point_error_message = f"User group request API call failed. ERROR CODE: {click_up_api_call_request}"
-                                print(click_up_api_end_point_error_message)
+                                click_up_api_end_point_error_message = f"User group request API call failed on endpoint {endpoint}. ERROR CODE: {click_up_api_call_request}"
                                 print(results, f" THE COUNT IS {count}")
-                                break
+                                raise click_up_api_end_point_error_message 
                         elif count == 1:
                                 user_teams_json = click_up_api_call_request.json().get("groups")
                                 results["groups:"] = user_teams_json
