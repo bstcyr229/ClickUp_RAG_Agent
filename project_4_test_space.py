@@ -48,23 +48,30 @@ class ClickUpClient:
         test_space_id = os.getenv("test_space")     
                                 
         def api_call_func(self, teams_end_point , get_tasks_end_point, get_entries_end_point):
+                
                 results = {}
 
                 end_point_list = [teams_end_point, get_tasks_end_point, get_entries_end_point ]
                 count = 0
                 number = 0
-                while count < 3:     
-                        endpoint = end_point_list[number]
+                                
+                endpoint = end_point_list[number]
+                class APIEndPointErrorMessage(Exception):
+                        f"""User group request API call failed on endpoint {endpoint}. ERROR CODE: {click_up_api_call_request}"""
+                        pass 
+
+                
+                while count < 3:            
                         number += 1 
                         count += 1 
 
                         click_up_api_call_request = requests.get(self.base_url + endpoint, headers=self.headers)
+                        
                         if click_up_api_call_request.status_code != 200:
                                 count -= 1 
                                 number -= 1 
-                                click_up_api_end_point_error_message = f"User group request API call failed on endpoint {endpoint}. ERROR CODE: {click_up_api_call_request}"
-                                print(results, f" THE COUNT IS {count}")
-                                raise click_up_api_end_point_error_message 
+                                #click_up_api_end_point_error_message = f"User group request API call failed on endpoint {endpoint}. ERROR CODE: {click_up_api_call_request}"
+                                raise APIEndPointErrorMessage 
                         elif count == 1:
                                 user_teams_json = click_up_api_call_request.json().get("groups")
                                 results["groups:"] = user_teams_json
@@ -108,6 +115,7 @@ def main():
         get_entries_end_point = f"team/{workspace_id}/time_entries?start_date={start_date}&end_date={end_date}"
         class_client = ClickUpClient()
         click_up_api_call_test = class_client.api_call_func(teams_end_point, get_tasks_end_point, get_entries_end_point)
+        
         #data_normalization(click_up_api_call_test)
 main()
 
