@@ -1,19 +1,11 @@
-import os
 import datetime
-import requests
-import json 
+import os
+from datetime import datetime as dt
 
-import numpy as np
 import pandas as pd
-import streamlit as st
-import altair as alt   
-
-import chromadb
-
-
-from google import genai
-from datetime import datetime as dt, timedelta , timezone 
+import requests
 from dotenv import load_dotenv
+
 load_dotenv()
 
 # GOOGLE_GENAI_USE_VERTEXAI="false"
@@ -24,8 +16,8 @@ load_dotenv()
 #COMMENTED OUT TO USE A PRE-DEFINED DATE FOR TESTING start_date = st.datetime_input(label="Please enter start date", format="YYYY/MM/DD", value=dt(2026, 4, 1, tzinfo=timezone.utc), key="start_date")
 #end_date =  st.datetime_input(label="Please enter end date", format="YYYY/MM/DD", value=dt(2026, 5, 1, tzinfo=timezone.utc), key="end_date" )
 
-start_date = dt(2026, 4, 1, tzinfo=timezone.utc)
-end_date =  dt(2026, 5, 1, tzinfo=timezone.utc)
+start_date = dt(2026, 4, 1, tzinfo=datetime.UTC)
+end_date =  dt(2026, 5, 1, tzinfo=datetime.UTC)
 unix_converter = 1000
 mileseconds_converter = 3600000
 start_date = int(start_date.timestamp() * unix_converter)
@@ -70,21 +62,21 @@ class ClickUpClient:
                         elif count == 1:
                                 user_teams_json = click_up_api_call_request.json().get("groups")
                                 results["groups:"] = user_teams_json
-                                print(f" THE COUNT IS {count}, END-POINT IS {endpoint}")
+                                #print(f" THE COUNT IS {count}, END-POINT IS {endpoint}")
 
                                 continue
                         elif count == 2:
                                 tasks_json = click_up_api_call_request.json().get("tasks")
                                 results["tasks:"] = tasks_json 
-                                print(f" THE COUNT IS {count}, END-POINT IS {endpoint}")
+                                #print(f" THE COUNT IS {count}, END-POINT IS {endpoint}")
 
                                 continue
                         elif count == 3: 
                                 entries_json = click_up_api_call_request.json().get("data")
                                 results["entries"] = entries_json
-                                print(f" THE COUNT IS {count}, END-POINT IS {endpoint}")
-
-                                return results
+                                #print(f" THE COUNT IS {count}, END-POINT IS {endpoint}")
+                                return print(type(results["entries"]))
+                                #return results
 def data_normalization(results):
         user_groups_df = pd.json_normalize(results["groups:"])  
         user_groups_df = user_groups_df.explode('members')

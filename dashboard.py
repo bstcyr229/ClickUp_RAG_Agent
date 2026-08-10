@@ -1,29 +1,26 @@
+import os
+from datetime import UTC, timedelta
+from datetime import datetime as dt
+
+import altair as alt
 import chromadb
+import holidays
 import numpy as np
 import pandas as pd
-import streamlit as st
-import altair as alt   
 import requests
-import os
-import json 
-import holidays
+import streamlit as st
+from dotenv import load_dotenv
 from google import genai
 
-
-from datetime import datetime as dt, timedelta , timezone 
-
-from dotenv import load_dotenv
 load_dotenv()
 GOOGLE_GENAI_USE_VERTEXAI="false"
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 from chromadb.utils.embedding_functions import GoogleGeminiEmbeddingFunction
 
 
-
-
 def user_input_for_dashboard():
-        start_date = st.datetime_input(label="Please enter start date", format="YYYY/MM/DD", value=dt(2026, 4, 1, tzinfo=timezone.utc), key="start_date")
-        end_date =  st.datetime_input(label="Please enter end date", format="YYYY/MM/DD", value=dt(2026, 5, 1, tzinfo=timezone.utc), key="end_date" )
+        start_date = st.datetime_input(label="Please enter start date", format="YYYY/MM/DD", value=dt(2026, 4, 1, tzinfo=UTC), key="start_date")
+        end_date =  st.datetime_input(label="Please enter end date", format="YYYY/MM/DD", value=dt(2026, 5, 1, tzinfo=UTC), key="end_date" )
         dates_tuple = start_date, end_date
         return dates_tuple
 
@@ -390,7 +387,7 @@ def display_rag_results(user_input, final_df_collection , work_days_for_data_fra
             contents=results_prompt_user_input
         )
         
-        return st.write((response.text))
+        return st.write(response.text)
 def main():
     step_one_for_main_call = user_input_for_dashboard()
     step_two_for_main_call = fetching_tasks(step_one_for_main_call)

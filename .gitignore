@@ -7,7 +7,11 @@ __pycache__/
 *.so
 
 # Distribution / packaging
+*.json
 .Python
+.python-version
+*.bin 
+*.sqlite3
 build/
 develop-eggs/
 dist/
@@ -24,6 +28,7 @@ share/python-wheels/
 *.egg-info/
 .installed.cfg
 *.egg
+.toml
 MANIFEST
 
 # PyInstaller
