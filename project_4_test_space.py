@@ -43,11 +43,11 @@ class ClickUpClient:
         test_space_id = os.getenv("test_space")     
 
         def api_call_func(self, count, teams_end_point , get_tasks_end_point, get_entries_end_point):
+                self.count = count 
                 results = {}
-                
                 end_point_list = [teams_end_point, get_tasks_end_point, get_entries_end_point ]
                 number = 0
-                                                                
+
                 while count < 3:            
                         endpoint = end_point_list[number]
                         number += 1 
@@ -75,7 +75,8 @@ class ClickUpClient:
                                 entries_json = click_up_api_call_request.json().get("data")
                                 results["entries"] = entries_json
                                 #print(f" THE COUNT IS {count}, END-POINT IS {endpoint}")
-                                return print(type(results["entries"]))
+                                return print(count)
+
                                 #return results
 def data_normalization(results):
         user_groups_df = pd.json_normalize(results["groups:"])  
@@ -99,7 +100,7 @@ def rag_pipeline():
 
 
 def main():
-
+        count = 0
         workspace_id = os.getenv("workspace_id") 
         test_space_id = os.getenv("test_space") 
         teams_end_point = f"group?team_id={workspace_id}" 
@@ -107,12 +108,12 @@ def main():
         get_entries_end_point = f"team/{workspace_id}/time_entries?start_date={start_date}&end_date={end_date}"
         class_client = ClickUpClient()
 
-        while class_client.api_call_func.count != 3:
-                try:
-                        click_up_api_call_test = class_client.api_call_func(teams_end_point, get_tasks_end_point, get_entries_end_point)
-                        print(f"Sucess the count is {class_client.api_call_func.count}")
+
+        try: 
+                click_up_api_call_test = class_client.api_call_func(count, teams_end_point, get_tasks_end_point, get_entries_end_point)
+                print(f"Sucess the count is {class_client.api_call_func.count}")
                                         
-                except APIEndPointErrorMessage as api_error_message: 
+        except APIEndPointErrorMessage as api_error_message: 
                         print(api_error_message) 
         #data_normalization(click_up_api_call_test)
 main()
