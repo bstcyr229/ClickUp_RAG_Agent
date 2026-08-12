@@ -41,9 +41,10 @@ class ClickUpClient:
         base_url = "https://api.clickup.com/api/v2/"
         workspace_id = os.getenv("workspace_id") 
         test_space_id = os.getenv("test_space")     
-
+        
         def api_call_func(self, count, teams_end_point , get_tasks_end_point, get_entries_end_point):
                 self.count = count 
+                count = 0 
                 results = {}
                 end_point_list = [teams_end_point, get_tasks_end_point, get_entries_end_point ]
                 number = 0
@@ -74,8 +75,7 @@ class ClickUpClient:
                         elif count == 3: 
                                 entries_json = click_up_api_call_request.json().get("data")
                                 results["entries"] = entries_json
-                                #print(f" THE COUNT IS {count}, END-POINT IS {endpoint}")
-                                return print(count)
+                                print(f" THE COUNT IS {count}, END-POINT IS {endpoint}")
 
                                 #return results
 def data_normalization(results):
@@ -111,7 +111,7 @@ def main():
 
         try: 
                 click_up_api_call_test = class_client.api_call_func(count, teams_end_point, get_tasks_end_point, get_entries_end_point)
-                print(f"Sucess the count is {class_client.api_call_func.count}")
+                print(f"class_client count is {class_client.count}")
                                         
         except APIEndPointErrorMessage as api_error_message: 
                         print(api_error_message) 
