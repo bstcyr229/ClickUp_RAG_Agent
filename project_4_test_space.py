@@ -42,40 +42,39 @@ class ClickUpClient:
         workspace_id = os.getenv("workspace_id") 
         test_space_id = os.getenv("test_space")     
         
-        def api_call_func(self, count, teams_end_point , get_tasks_end_point, get_entries_end_point):
-                self.count = count 
-                count = 0 
+        def api_call_func(self, teams_end_point , get_tasks_end_point, get_entries_end_point):
+                self.count = 0 
                 results = {}
                 end_point_list = [teams_end_point, get_tasks_end_point, get_entries_end_point ]
-                number = 0
+                self.number = 0
 
-                while count < 3:            
-                        endpoint = end_point_list[number]
-                        number += 1 
-                        count += 1 
+                while self.count < 3:            
+                        endpoint = end_point_list[self.number]
+                        self.number += 1 
+                        self.count += 1 
 
                         click_up_api_call_request = requests.get(self.base_url + endpoint, headers=self.headers)
                         
                         if click_up_api_call_request.status_code != 200:
-                                count -= 1 
-                                number -= 1 
+                                self.count -= 1 
+                                self.number -= 1 
                                 raise APIEndPointErrorMessage(f"User group request API call failed on endpoint {endpoint}. ERROR CODE: {click_up_api_call_request}")
-                        elif count == 1:
+                        elif self.count == 1:
                                 user_teams_json = click_up_api_call_request.json().get("groups")
                                 results["groups:"] = user_teams_json
                                 #print(f" THE COUNT IS {count}, END-POINT IS {endpoint}")
 
                                 continue
-                        elif count == 2:
+                        elif self.count == 2:
                                 tasks_json = click_up_api_call_request.json().get("tasks")
                                 results["tasks:"] = tasks_json 
                                 #print(f" THE COUNT IS {count}, END-POINT IS {endpoint}")
 
                                 continue
-                        elif count == 3: 
+                        elif self.count == 3: 
                                 entries_json = click_up_api_call_request.json().get("data")
                                 results["entries"] = entries_json
-                                print(f" THE COUNT IS {count}, END-POINT IS {endpoint}")
+                                print(f" THE COUNT IS {self.count}, END-POINT IS {endpoint}")
 
                                 #return results
 def data_normalization(results):
@@ -100,7 +99,6 @@ def rag_pipeline():
 
 
 def main():
-        count = 0
         workspace_id = os.getenv("workspace_id") 
         test_space_id = os.getenv("test_space") 
         teams_end_point = f"group?team_id={workspace_id}" 
@@ -108,14 +106,14 @@ def main():
         get_entries_end_point = f"team/{workspace_id}/time_entries?start_date={start_date}&end_date={end_date}"
         class_client = ClickUpClient()
 
-
-        try: 
-                click_up_api_call_test = class_client.api_call_func(count, teams_end_point, get_tasks_end_point, get_entries_end_point)
-                print(f"class_client count is {class_client.count}")
-                                        
-        except APIEndPointErrorMessage as api_error_message: 
-                        print(api_error_message) 
-        #data_normalization(click_up_api_call_test)
+        while class_client.count.api_call_func() > 3:        
+                try: 
+                        click_up_api_call_test = class_client.api_call_func(teams_end_point, get_tasks_end_point, get_entries_end_point)
+                        print(f"class_client count is {class_client.count}")
+                                                
+                except APIEndPointErrorMessage as api_error_message: 
+                                print(api_error_message) 
+                #data_normalization(click_up_api_call_test)
 main()
 
 
