@@ -44,7 +44,7 @@ class ClickUpClient:
         
         def api_call_func(self, teams_end_point , get_tasks_end_point, get_entries_end_point):
                 self.count = 0 
-                results = {}
+                self.results = {}
                 end_point_list = [teams_end_point, get_tasks_end_point, get_entries_end_point ]
                 self.number = 0
 
@@ -61,19 +61,19 @@ class ClickUpClient:
                                 raise APIEndPointErrorMessage(f"User group request API call failed on endpoint {endpoint}. ERROR CODE: {click_up_api_call_request}")
                         elif self.count == 1:
                                 user_teams_json = click_up_api_call_request.json().get("groups")
-                                results["groups:"] = user_teams_json
+                                self.results["groups:"] = user_teams_json
                                 #print(f" THE COUNT IS {count}, END-POINT IS {endpoint}")
 
                                 continue
                         elif self.count == 2:
                                 tasks_json = click_up_api_call_request.json().get("tasks")
-                                results["tasks:"] = tasks_json 
+                                self.results["tasks:"] = tasks_json 
                                 #print(f" THE COUNT IS {count}, END-POINT IS {endpoint}")
 
                                 continue
                         elif self.count == 3: 
                                 entries_json = click_up_api_call_request.json().get("data")
-                                results["entries"] = entries_json
+                                self.results["entries"] = entries_json
                                 print(f" THE COUNT IS {self.count}, END-POINT IS {endpoint}")
 
                                 #return results
