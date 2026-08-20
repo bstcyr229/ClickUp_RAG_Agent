@@ -43,11 +43,15 @@ class ClickUpClient:
         test_space_id = os.getenv("test_space")     
         
         def api_call_func(self, teams_end_point , get_tasks_end_point, get_entries_end_point):
-                self.count = 0 
-                self.results = {}
+                if not hasattr(self,"count"):
+                        self.count = 0 
+                if not hasattr(self, "number"):
+                        self.number = 0
+                if not hasattr(self,"results"):
+                        self.results = {}
+                
                 end_point_list = [teams_end_point, get_tasks_end_point, get_entries_end_point ]
-                self.number = 0
-
+                
                 while self.count < 3:            
                         endpoint = end_point_list[self.number]
                         self.number += 1 
@@ -62,21 +66,17 @@ class ClickUpClient:
                         elif self.count == 1:
                                 user_teams_json = click_up_api_call_request.json().get("groups")
                                 self.results["groups:"] = user_teams_json
-                                #print(f" THE COUNT IS {count}, END-POINT IS {endpoint}")
-
                                 continue
                         elif self.count == 2:
                                 tasks_json = click_up_api_call_request.json().get("tasks")
                                 self.results["tasks:"] = tasks_json 
-                                #print(f" THE COUNT IS {count}, END-POINT IS {endpoint}")
+                                print(f" THE COUNT IS {self.count}, END-POINT IS {endpoint}")
 
                                 continue
                         elif self.count == 3: 
                                 entries_json = click_up_api_call_request.json().get("data")
                                 self.results["entries"] = entries_json
-                                print(f" THE COUNT IS {self.count}, END-POINT IS {endpoint}")
-
-                                #return results
+                                return self.results
 def data_normalization(results):
         user_groups_df = pd.json_normalize(results["groups:"])  
         user_groups_df = user_groups_df.explode('members')
@@ -102,17 +102,23 @@ def main():
         workspace_id = os.getenv("workspace_id") 
         test_space_id = os.getenv("test_space") 
         teams_end_point = f"group?team_id={workspace_id}" 
-        get_tasks_end_point=f"team/{workspace_id}/task?space_ids[]={test_space_id}" #Failure injection / here
+        get_tasks_end_point=f"/team/{workspace_id}/task?space_ids[]={test_space_id}" #Failure injection / here
         get_entries_end_point = f"team/{workspace_id}/time_entries?start_date={start_date}&end_date={end_date}"
         class_client = ClickUpClient()
+        retries = 0
+        max_retries = 5
 
-        while class_client.count.api_call_func() > 3:        
+        while retries < max_retries:        
+                
+                
                 try: 
                         click_up_api_call_test = class_client.api_call_func(teams_end_point, get_tasks_end_point, get_entries_end_point)
-                        print(f"class_client count is {class_client.count}")
+                        
                                                 
                 except APIEndPointErrorMessage as api_error_message: 
-                                print(api_error_message) 
+                                print(f"This is retry number {retries} you have {max_retries - retries} remaining")
+                                print(api_error_message)
+                                retries += 1 
                 #data_normalization(click_up_api_call_test)
 main()
 
