@@ -1,4 +1,5 @@
 import datetime
+import time 
 import os
 from datetime import datetime as dt
 
@@ -105,21 +106,31 @@ def main():
         get_tasks_end_point=f"/team/{workspace_id}/task?space_ids[]={test_space_id}" #Failure injection / here
         get_entries_end_point = f"team/{workspace_id}/time_entries?start_date={start_date}&end_date={end_date}"
         class_client = ClickUpClient()
-        retries = 0
+        retries = 5
         max_retries = 5
-
+        api_time_delay = 30 
+        
         while retries < max_retries:        
                 
                 
                 try: 
                         click_up_api_call_test = class_client.api_call_func(teams_end_point, get_tasks_end_point, get_entries_end_point)
                         
+
+
+
                                                 
                 except APIEndPointErrorMessage as api_error_message: 
-                                print(f"This is retry number {retries} you have {max_retries - retries} remaining")
+                                retries += 1
+                                last_error = str(api_error_message)
+                                print(f"This is attempt number {retries} you have {max_retries - retries} remaining")
                                 print(api_error_message)
-                                retries += 1 
-                #data_normalization(click_up_api_call_test)
+                                time.sleep(api_time_delay)
+                                
+        if retries == max_retries:
+                raise APIEndPointErrorMessage(last_error)
+                
+        #data_normalization(click_up_api_call_test)
 main()
 
 
