@@ -71,8 +71,6 @@ class ClickUpClient:
                         elif self.count == 2:
                                 tasks_json = click_up_api_call_request.json().get("tasks")
                                 self.results["tasks:"] = tasks_json 
-                                print(f" THE COUNT IS {self.count}, END-POINT IS {endpoint}")
-
                                 continue
                         elif self.count == 3: 
                                 entries_json = click_up_api_call_request.json().get("data")
@@ -90,6 +88,7 @@ def data_normalization(results):
                 'team_member',
                 'team_member_id',
                 ]].copy
+        print(user_groups_df_filtered)
         
 def display_data():
         pass 
@@ -109,6 +108,8 @@ def main():
         retries = 5
         max_retries = 5
         api_time_delay = 30 
+        api_error_message = "API Authentication failed "
+        last_error = None
         
         while retries < max_retries:        
                 
@@ -126,10 +127,12 @@ def main():
                                 print(f"This is attempt number {retries} you have {max_retries - retries} remaining")
                                 print(api_error_message)
                                 time.sleep(api_time_delay)
+
                                 
-        if retries == max_retries:
+        if retries == max_retries and APIEndPointErrorMessage(last_error) is not None :
                 raise APIEndPointErrorMessage(last_error)
-                
+        else:
+                print(api_error_message)
         #data_normalization(click_up_api_call_test)
 main()
 
