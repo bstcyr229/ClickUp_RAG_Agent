@@ -24,6 +24,7 @@ mileseconds_converter = 3600000
 start_date = int(start_date.timestamp() * unix_converter)
 end_date = int(end_date.timestamp() * unix_converter)
 
+
 class APIEndPointErrorMessage(Exception):
         pass 
 class DateRange:
@@ -102,22 +103,26 @@ def main():
         workspace_id = os.getenv("workspace_id") 
         test_space_id = os.getenv("test_space") 
         teams_end_point = f"group?team_id={workspace_id}" 
-        get_tasks_end_point=f"/team/{workspace_id}/task?space_ids[]={test_space_id}" #Failure injection / here
+        get_tasks_end_point=f"team/{workspace_id}/task?space_ids[]={test_space_id}" 
         get_entries_end_point = f"team/{workspace_id}/time_entries?start_date={start_date}&end_date={end_date}"
         class_client = ClickUpClient()
-        retries = 5
+        retries = 0
         max_retries = 5
         api_time_delay = 30 
         api_error_message = "API Authentication failed "
         last_error = None
         
+        #while click_up_api_call_test = class_client.api_call_func
+        
         while retries < max_retries:        
                 
                 
                 try: 
-                        click_up_api_call_test = class_client.api_call_func(teams_end_point, get_tasks_end_point, get_entries_end_point)
-                        
-
+                        click_up_api_call_test = class_client.api_call_func(teams_end_point, get_tasks_end_point, get_entries_end_point) 
+                        print(f"CLICKUP API CALL TEST IS {type(click_up_api_call_test.results)}")        
+                        #print(click_up_api_call_test.results)
+                        # if click_up_api_call_test(self.result) is not None:
+                        #         break 
 
 
                                                 
@@ -129,7 +134,7 @@ def main():
                                 time.sleep(api_time_delay)
 
                                 
-        if retries == max_retries and APIEndPointErrorMessage(last_error) is not None :
+        if retries == max_retries and last_error is not None :
                 raise APIEndPointErrorMessage(last_error)
         else:
                 print(api_error_message)
