@@ -77,6 +77,7 @@ class ClickUpClient:
                                 entries_json = click_up_api_call_request.json().get("data")
                                 self.results["entries"] = entries_json
                                 return self.results
+                
 def data_normalization(results):
         user_groups_df = pd.json_normalize(results["groups:"])  
         user_groups_df = user_groups_df.explode('members')
@@ -106,6 +107,7 @@ def main():
         get_tasks_end_point=f"team/{workspace_id}/task?space_ids[]={test_space_id}" 
         get_entries_end_point = f"team/{workspace_id}/time_entries?start_date={start_date}&end_date={end_date}"
         class_client = ClickUpClient()
+        check_results = class_client.results.get("entries")
         retries = 0
         max_retries = 5
         api_time_delay = 30 
@@ -114,12 +116,16 @@ def main():
         
         #while click_up_api_call_test = class_client.api_call_func
         
-        while retries < max_retries:        
+
+        while check_results is not None:
+        #while  retries < max_retries:        
                 
                 
                 try: 
-                        click_up_api_call_test = class_client.api_call_func(teams_end_point, get_tasks_end_point, get_entries_end_point) 
-                        print(f"CLICKUP API CALL TEST IS {type(click_up_api_call_test.results)}")        
+                        click_up_api_call_test = class_client.api_call_func(teams_end_point, get_tasks_end_point, get_entries_end_point)        
+
+
+
                         #print(click_up_api_call_test.results)
                         # if click_up_api_call_test(self.result) is not None:
                         #         break 
