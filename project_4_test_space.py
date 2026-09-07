@@ -107,6 +107,7 @@ def main():
         get_tasks_end_point=f"team/{workspace_id}/task?space_ids[]={test_space_id}" 
         get_entries_end_point = f"team/{workspace_id}/time_entries?start_date={start_date}&end_date={end_date}"
         class_client = ClickUpClient()
+        click_up_api_call_test = class_client.api_call_func(teams_end_point, get_tasks_end_point, get_entries_end_point)        
         check_results = class_client.results.get("entries")
         retries = 0
         max_retries = 5
@@ -114,22 +115,14 @@ def main():
         api_error_message = "API Authentication failed "
         last_error = None
         
-        #while click_up_api_call_test = class_client.api_call_func
         
 
-        while check_results is not None:
-        #while  retries < max_retries:        
+        while check_results is None and retries < max_retries:
                 
                 
                 try: 
                         click_up_api_call_test = class_client.api_call_func(teams_end_point, get_tasks_end_point, get_entries_end_point)        
-
-
-
-                        #print(click_up_api_call_test.results)
-                        # if click_up_api_call_test(self.result) is not None:
-                        #         break 
-
+                        check_results = class_client.results.get("entries")
 
                                                 
                 except APIEndPointErrorMessage as api_error_message: 
