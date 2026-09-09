@@ -55,15 +55,13 @@ class ClickUpClient:
                 end_point_list = [teams_end_point, get_tasks_end_point, get_entries_end_point ]
                 
                 while self.count < 3:            
-                        endpoint = end_point_list[self.number]
-                        self.number += 1 
+                        endpoint = end_point_list[self.count]
                         self.count += 1 
 
                         click_up_api_call_request = requests.get(self.base_url + endpoint, headers=self.headers)
                         
                         if click_up_api_call_request.status_code != 200:
                                 self.count -= 1 
-                                self.number -= 1 
                                 raise APIEndPointErrorMessage(f"User group request API call failed on endpoint {endpoint}. ERROR CODE: {click_up_api_call_request}")
                         elif self.count == 1:
                                 user_teams_json = click_up_api_call_request.json().get("groups")
@@ -90,7 +88,8 @@ def data_normalization(results):
                 'team_member',
                 'team_member_id',
                 ]].copy
-        print(user_groups_df_filtered)
+        print(type(user_groups_df_filtered))
+
         
 def display_data():
         pass 
@@ -133,11 +132,12 @@ def main():
                                 time.sleep(api_time_delay)
 
                                 
-        if retries == max_retries and last_error is not None :
-                raise APIEndPointErrorMessage(last_error)
-        else:
-                print(api_error_message)
-        #data_normalization(click_up_api_call_test)
+                if retries == max_retries and last_error is not None :
+                        raise APIEndPointErrorMessage(last_error)
+                else:
+                        print(api_error_message)
+        data_normalization(click_up_api_call_test)
+        
 main()
 
 
